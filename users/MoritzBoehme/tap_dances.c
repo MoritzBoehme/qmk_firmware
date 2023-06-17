@@ -3,19 +3,20 @@
 // Tap Dance Definitions
 tap_dance_action_t tap_dance_actions[] = {
     [BOOT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, boot_finished, boot_reset),
-    [LSFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lsft_finished, lsft_reset),
+    [SFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, sft_finished, sft_reset),
+    [GUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, gui_finished, gui_reset),
 };
 
 // Create an instance of 'td_tap_t' for each tap dance.
 // lsft tap_dance
-static td_tap_t lsft_tap_state = {
+static td_tap_t sft_tap_state = {
     .is_press_action = true,
     .state = TD_NONE
 };
 
-void lsft_finished(tap_dance_state_t *state, void *user_data) {
-    lsft_tap_state.state = cur_dance(state);
-    switch (lsft_tap_state.state) {
+void sft_finished(tap_dance_state_t *state, void *user_data) {
+    sft_tap_state.state = cur_dance(state);
+    switch (sft_tap_state.state) {
         case TD_SINGLE_TAP:
         case TD_SINGLE_HOLD: register_code(KC_LSFT); break;
         case TD_DOUBLE_TAP: caps_word_on(); break;
@@ -23,13 +24,13 @@ void lsft_finished(tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void lsft_reset(tap_dance_state_t *state, void *user_data) {
-    switch (lsft_tap_state.state) {
+void sft_reset(tap_dance_state_t *state, void *user_data) {
+    switch (sft_tap_state.state) {
         case TD_SINGLE_TAP:
         case TD_SINGLE_HOLD: unregister_code(KC_LSFT); break;
         default: break;
     }
-    lsft_tap_state.state = TD_NONE;
+    sft_tap_state.state = TD_NONE;
 }
 
 // boot tap_dance
@@ -48,6 +49,36 @@ void boot_finished(tap_dance_state_t *state, void *user_data) {
 
 void boot_reset(tap_dance_state_t *state, void *user_data) {
     boot_tap_state.state = TD_NONE;
+}
+
+// gui tap_dance
+static td_tap_t gui_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+void gui_finished(tap_dance_state_t *state, void *user_data) {
+    gui_tap_state.state = cur_dance(state);
+    switch (gui_tap_state.state) {
+        case TD_SINGLE_TAP:
+        case TD_SINGLE_HOLD: register_code(KC_LGUI); break;
+        case TD_DOUBLE_HOLD: register_code(KC_LGUI);
+                             register_code(KC_LALT);
+                             break;
+        default: break;
+    }
+}
+
+void gui_reset(tap_dance_state_t *state, void *user_data) {
+    switch (gui_tap_state.state) {
+        case TD_SINGLE_TAP:
+        case TD_SINGLE_HOLD: unregister_code(KC_LGUI); break;
+        case TD_DOUBLE_HOLD: unregister_code(KC_LGUI);
+                             unregister_code(KC_LALT);
+                             break;
+        default: break;
+    }
+    gui_tap_state.state = TD_NONE;
 }
 
 /* Return an integer that corresponds to what kind of tap dance should be executed.
