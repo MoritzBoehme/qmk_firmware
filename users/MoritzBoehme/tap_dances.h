@@ -22,13 +22,17 @@ typedef struct {
 // Tap Dance enum
 enum {
     BOOT,
-    LSFT,
+    SFT,
+    GUI,
 };
 
 td_state_t cur_dance(tap_dance_state_t *state);
 
-void lsft_finished(tap_dance_state_t *state, void *user_data);
-void lsft_reset(tap_dance_state_t *state, void *user_data);
+void sft_finished(tap_dance_state_t *state, void *user_data);
+void sft_reset(tap_dance_state_t *state, void *user_data);
 
 void boot_finished(tap_dance_state_t *state, void *user_data);
 void boot_reset(tap_dance_state_t *state, void *user_data);
+
+void gui_finished(tap_dance_state_t *state, void *user_data);
+void gui_reset(tap_dance_state_t *state, void *user_data);
