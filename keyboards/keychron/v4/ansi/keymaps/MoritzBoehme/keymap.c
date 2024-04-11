@@ -7,11 +7,13 @@ enum layers {
     PROGRAMMING = _PROGRAMMING,
     NORMAL = _NORMAL,
     FN0,
-    FN1
+    FN1,
+    NO_GUI,
 };
 
 #define KC_TASK LGUI(KC_TAB)
 #define KC_FLXP LGUI(KC_E)
+#define TG_GUI  TG(NO_GUI)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [PROGRAMMING] = LAYOUT_ansi_61(
@@ -26,7 +28,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,     KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,
         KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,     KC_SCLN, KC_QUOT,          KC_ENT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,   KC_SLSH,                   KC_RSFT,
-        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                              KC_RALT, KC_RCTL, TT(FN0), TT(FN1)),
+        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                              TG_GUI,  KC_RCTL, TT(FN0), TT(FN1)),
 
     [FN0] = LAYOUT_ansi_61(
         KC_GRV,  RGB_TOG, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, KC_MSTP, KC_MPRV, KC_MPLY, KC_MNXT,  KC_MUTE, KC_VOLD, KC_VOLU, KC_DEL,
@@ -40,5 +42,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______,                   TD_BOOT,
-        _______, _______, _______,                            _______,                             _______, _______, _______, _______)
+        _______, _______, _______,                            _______,                             _______, _______, _______, _______),
+
+    [NO_GUI] = LAYOUT_ansi_61(
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______,          _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______,                   _______,
+        _______, KC_NO,   _______,                            _______,                             _______, _______, _______, _______)
 };
