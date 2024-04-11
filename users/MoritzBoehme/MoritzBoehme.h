@@ -12,6 +12,6 @@
 void keyboard_post_init_user(void);
 
 enum userspace_layers {
-    _NORMAL = 0,
-    _PROGRAMMING = 1,
+    _PROGRAMMING = 0,
+    _NORMAL = 1,
 };
