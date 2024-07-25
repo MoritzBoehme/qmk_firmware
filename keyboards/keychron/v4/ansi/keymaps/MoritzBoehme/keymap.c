@@ -8,12 +8,18 @@ enum layers {
     NORMAL = _NORMAL,
     FN0,
     FN1,
-    NO_GUI,
+    GAME,
+};
+
+// Custom Keycodes
+enum custom_keycodes {
+	SOCD_A = SAFE_RANGE,
+	SOCD_D
 };
 
 #define KC_TASK LGUI(KC_TAB)
 #define KC_FLXP LGUI(KC_E)
-#define TG_GUI  TG(NO_GUI)
+#define TG_GAME TG(GAME)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [PROGRAMMING] = LAYOUT_ansi_61(
@@ -28,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,     KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,
         KC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,     KC_SCLN, KC_QUOT,          KC_ENT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,   KC_SLSH,                   KC_RSFT,
-        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                              TG_GUI,  KC_RCTL, TT(FN0), TT(FN1)),
+        KC_LCTL, KC_LGUI, KC_LALT,                            KC_SPC,                              TG_GAME, KC_RCTL, TT(FN0), TT(FN1)),
 
     [FN0] = LAYOUT_ansi_61(
         KC_GRV,  RGB_TOG, RGB_MOD, RGB_VAI, RGB_HUI, RGB_SAI, KC_MSTP, KC_MPRV, KC_MPLY, KC_MNXT,  KC_MUTE, KC_VOLD, KC_VOLU, KC_DEL,
@@ -44,10 +50,59 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______,                   TD_BOOT,
         _______, _______, _______,                            _______,                             _______, _______, _______, _______),
 
-    [NO_GUI] = LAYOUT_ansi_61(
+    [GAME] = LAYOUT_ansi_61(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______,          _______,
+        _______, SOCD_A,  _______, SOCD_D,  _______, _______, _______, _______, _______, _______,  _______, _______,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______,                   _______,
-        _______, KC_NO,   _______,                            _______,                             _______, _______, _______, _______)
+        _______, KC_NO,   _______,                            _______,                             TG_GAME, _______, _______, _______)
+};
+
+// SOCD (Last Input Wins) Boolean Logic
+bool A_KEYSTATE = false;
+bool D_KEYSTATE = false;
+bool A_PRIORITY = false;
+bool D_PRIORITY = false;
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+	switch (keycode) {
+		case SOCD_A:
+			if (record->event.pressed) {
+				A_KEYSTATE = true;
+				if (D_KEYSTATE) {
+					D_PRIORITY = false;
+					A_PRIORITY = true;
+					unregister_code(KC_D);
+				}
+				register_code(KC_A);
+			} else {
+				A_KEYSTATE = false;
+				A_PRIORITY = false;
+				unregister_code(KC_A);
+				if (D_KEYSTATE && !D_PRIORITY) {
+					register_code(KC_D);
+				}
+			}
+			return false;
+		case SOCD_D:
+			if (record->event.pressed) {
+				D_KEYSTATE = true;
+				if (A_KEYSTATE) {
+					A_PRIORITY = false;
+					D_PRIORITY = true;
+					unregister_code(KC_A);
+				}
+				register_code(KC_D);
+			} else {
+				D_KEYSTATE = false;
+				D_PRIORITY = false;
+				unregister_code(KC_D);
+				if (A_KEYSTATE && !A_PRIORITY) {
+					register_code(KC_A);
+				}
+			}
+			return false;
+		default:
+			return true;
+	}
 };
