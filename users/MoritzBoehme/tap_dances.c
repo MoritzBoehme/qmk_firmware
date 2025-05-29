@@ -1,12 +1,5 @@
 #include "tap_dances.h"
 
-// Tap Dance Definitions
-tap_dance_action_t tap_dance_actions[] = {
-    [_BOOT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, boot_finished, boot_reset),
-    [_LSFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lsft_finished, lsft_reset),
-    [_LGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lgui_finished, lgui_reset),
-};
-
 // Create an instance of 'td_tap_t' for each tap dance.
 // lsft tap_dance
 static td_tap_t lsft_tap_state = {

@@ -20,6 +20,13 @@ enum custom_keycodes {
 #define KC_FLXP LGUI(KC_E)
 #define TG_GAME TG(GAME)
 
+// Tap Dance Definitions
+tap_dance_action_t tap_dance_actions[] = {
+    [_BOOT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, boot_finished, boot_reset),
+    [_LSFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lsft_finished, lsft_reset),
+    [_LGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, lgui_finished, lgui_reset),
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [PROGRAMMING] = LAYOUT_ansi_61(
         KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,     KC_0,    KC_MINS, KC_EQL,  KC_BSPC,
